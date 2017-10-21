@@ -75,8 +75,8 @@ def fetch():
                        (datestr, episode.pubdate, episode.length, url))
 
 def urls():
-    for row in db.execute('SELECT date FROM episodes ORDER BY date'):
-        print(URL % row[0])
+    for row in db.execute('SELECT url FROM episodes ORDER BY date'):
+        print(row[0])
 
 def print_usage():
     print("Usage: %s <fetch | urls>" % argv[0])
