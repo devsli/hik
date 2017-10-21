@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Radio Record / Кремов и Хрусталев</title>
+    <link>http://www.radiorecord.ru</link>
+    <language>ru-ru</language>
+    <copyright>Radio Record Russia</copyright>
+    <atom:link href="http://www.radiorecord.ru/rss.xml" rel="self" type="application/rss+xml" />
+    <itunes:subtitle>Radio Record</itunes:subtitle>
+    <itunes:author>www.radiorecord.ru</itunes:author>
+    <itunes:summary>Программы Радио Рекорд</itunes:summary>
+    <description>Программы Радио Рекорд</description>
+    <itunes:owner>
+      <itunes:name>Marsel Markhabulin</itunes:name>
+      <itunes:email>milar@marsell.ws</itunes:email>
+    </itunes:owner>
+    <itunes:image href="http://www.radiorecord.ru/i/img/rr-logo-podcast.png" />
+    <itunes:category text="Music"/>
+    <itunes:explicit>clean</itunes:explicit>
+
+    {% for item in items %}
+    <item>
+      <title>{{ item[2] }}</title>
+      <itunes:author>{{ item[3] }}</itunes:author>
+      <itunes:subtitle>{{ item[4] }}</itunes:subtitle>
+      <itunes:summary>{{ item[5] }}</itunes:summary>
+      <itunes:image href="{{ item[6] }}" />
+      <enclosure url="{{ item[7] }}" length="{{ item[2] }}" type="{{ item[8] }}" />
+      <guid>{{ item[9] }}</guid>
+      <pubDate>{{ item[1] }}</pubDate>
+      <description>{{ item[10] }}</description>
+      <itunes:duration>{{ item[11] }}</itunes:duration>
+      <itunes:explicit>{{ item[12] }}</itunes:explicit>
+    </item>
+    {% endfor %}
+
+  </channel>
+</rss>

@@ -3,6 +3,7 @@ import sqlite3
 import feedparser
 from datetime import timedelta, date
 from sys import argv
+from jinja2 import Environment, PackageLoader, select_autoescape
 
 db = sqlite3.connect("kih.sqlite")
 db.execute("""CREATE TABLE IF NOT EXISTS episodes
@@ -85,6 +86,13 @@ def load_metadata(feed):
         itunes_image, url, type_, guid, description, itunes_duration,
         itunes_explicit))
 
+def mkfeed():
+    env = Environment(
+        loader=PackageLoader('hik')
+    )
+    template = env.get_template('rss.xml.tmpl')
+    items = db.execute("SELECT * FROM episodes")
+    print(template.render(items=items))
 
 def fetch():
     feed = feedparser.parse(FEED)
@@ -113,17 +121,17 @@ def urls():
 def print_usage():
     print("Usage: %s <fetch | fetchold | urls>" % argv[0])
 
+args = {
+    "fetchold": fetch_old,
+    "urls": urls,
+    "fetch": fetch,
+    "feed": mkfeed
+}
+
 if len(argv) == 1:
     print_usage()
 else:
-    if argv[1] == "fetchold":
-        fetch_old()
-
-    elif argv[1] == "urls":
-        urls()
-
-    elif argv[1] == "fetch":
-        fetch()
+    args[argv[1]]()
 
 db.commit()
 db.close()
