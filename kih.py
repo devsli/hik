@@ -1,19 +1,19 @@
 import pycurl
 import sqlite3
+import feedparser
 from datetime import timedelta, date
 from sys import argv
 
 db = sqlite3.connect("kih.sqlite")
 db.execute("""CREATE TABLE IF NOT EXISTS episodes
-              (date PRIMARY KEY,
-               pubdate,
+              (pubdate,
                len integer,
                title,
                itunes_author,
                itunes_subtitle,
                itunes_summary,
                itunes_image,
-               url,
+               url PRIMARY KEY,
                type,
                guid,
                description,
@@ -60,7 +60,39 @@ def get_episode(date):
     c.close()
     return result
 
+def load_metadata(feed):
+    pubdate = feed['published']
+    len_ = feed['links'][0]['length']
+    title = feed['title']
+    itunes_author = feed['author']
+    itunes_subtitles = feed['subtitle']
+    itunes_summary = feed['summary']
+    itunes_image = feed['image']['href']
+    url = feed['links'][0]['href']
+    type_ = feed['links'][0]['type']
+    guid = feed['id']
+    description = ''
+    itunes_duration = feed['itunes_duration']
+    itunes_explicit = feed['itunes_explicit'] and 'explicit' or 'clean'
+
+    db.execute("""
+        INSERT OR REPLACE INTO episodes
+        (pubdate, len, title, itunes_author, itunes_subtitle, itunes_summary,
+        itunes_image, url, type, guid, description, itunes_duration,
+        itunes_explicit)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", (
+        pubdate, len_, title, itunes_author, itunes_subtitles, itunes_summary,
+        itunes_image, url, type_, guid, description, itunes_duration,
+        itunes_explicit))
+
+
 def fetch():
+    feed = feedparser.parse(FEED)
+    for item in feed['entries']:
+        if 'Хруст' in item['title']:
+            load_metadata(item)
+
+def fetch_old():
     start_date = date(2016, 3, 14)
     end_date = date.today()
     for current in daterange(start_date, end_date):
@@ -70,24 +102,28 @@ def fetch():
             datestr = current.strftime(DATEFMT)
             url = URL % (datestr, )
 
-            db.execute("""INSERT INTO episodes (date, pubdate, len, url)
+            db.execute("""INSERT INTO episodes (pubdate, len, url)
                           VALUES (?, ?, ?);""",
-                       (datestr, episode.pubdate, episode.length, url))
+                       (episode.pubdate, episode.length, url))
 
 def urls():
-    for row in db.execute('SELECT url FROM episodes ORDER BY date'):
+    for row in db.execute('SELECT url FROM episodes ORDER BY url'):
         print(row[0])
 
 def print_usage():
-    print("Usage: %s <fetch | urls>" % argv[0])
+    print("Usage: %s <fetch | fetchold | urls>" % argv[0])
 
 if len(argv) == 1:
     print_usage()
 else:
-    if argv[1] == "fetch":
-        fetch()
+    if argv[1] == "fetchold":
+        fetch_old()
+
     elif argv[1] == "urls":
         urls()
+
+    elif argv[1] == "fetch":
+        fetch()
 
 db.commit()
 db.close()
