@@ -27,7 +27,11 @@ To properly save/load SQLite3 database you first need to tune your git::
 Как использовать
 ~~~~~~~~~~~~~~~~
 
-Поиск выпусков::
+Поиск старых выпусков::
+
+  python -m kih fetchold
+
+Загрузка новых выпусков из RSS::
 
   python -m kih fetch
 
