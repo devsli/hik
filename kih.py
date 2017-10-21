@@ -1,11 +1,14 @@
 import pycurl
 import sqlite3
 from datetime import timedelta, date
+from sys import argv
 
-db = sqlite3.connect("kih.db")
-db.execute("CREATE TABLE IF NOT EXISTS episodes (date, pubdate, len integer);")
+db = sqlite3.connect("kih.sqlite")
+db.execute("""CREATE TABLE IF NOT EXISTS episodes
+              (date PRIMARY KEY, pubdate, len integer);""")
 
 URL = "http://78.140.251.40/tmp_audio/itunes2/hik_-_rr_%s.mp3"
+FEED = "http://www.radiorecord.ru/rss.xml"
 DATEFMT = "%Y-%m-%d"
 
 def daterange(start_date, end_date):
@@ -51,8 +54,25 @@ def fetch():
         episode = get_episode(current)
         if episode.exists:
             print("%s: exists!" % current)
-            db.execute("INSERT INTO episodes (date, pubdate, len) VALUES (?, ?, ?);",
-                       (current.strftime(DATEFMT), episode.pubdate, episode.length))
+            db.execute("""INSERT INTO episodes (date, pubdate, len)
+                          VALUES (?, ?, ?);""",
+                       (current.strftime(DATEFMT), episode.pubdate,
+                        episode.length))
+
+def urls():
+    for row in db.execute('SELECT date FROM episodes ORDER BY date'):
+        print(URL % row[0])
+
+def print_usage():
+    print("Usage: %s fetch | urls" % argv[0])
+
+if len(argv) == 1:
+    print_usage()
+else:
+    if argv[1] == "fetch":
+        fetch()
+    elif argv[1] == "urls":
+        urls()
 
 db.commit()
 db.close()
