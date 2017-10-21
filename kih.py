@@ -5,7 +5,20 @@ from sys import argv
 
 db = sqlite3.connect("kih.sqlite")
 db.execute("""CREATE TABLE IF NOT EXISTS episodes
-              (date PRIMARY KEY, pubdate, len integer);""")
+              (date PRIMARY KEY,
+               pubdate,
+               len integer,
+               title,
+               itunes_author,
+               itunes_subtitle,
+               itunes_summary,
+               itunes_image,
+               url,
+               type,
+               guid,
+               description,
+               itunes_duration,
+               itunes_explicit);""")
 
 URL = "http://78.140.251.40/tmp_audio/itunes2/hik_-_rr_%s.mp3"
 FEED = "http://www.radiorecord.ru/rss.xml"
@@ -54,10 +67,12 @@ def fetch():
         episode = get_episode(current)
         if episode.exists:
             print("%s: exists!" % current)
-            db.execute("""INSERT INTO episodes (date, pubdate, len)
+            datestr = current.strftime(DATEFMT)
+            url = URL % (datestr, )
+
+            db.execute("""INSERT INTO episodes (date, pubdate, len, url)
                           VALUES (?, ?, ?);""",
-                       (current.strftime(DATEFMT), episode.pubdate,
-                        episode.length))
+                       (datestr, episode.pubdate, episode.length, url))
 
 def urls():
     for row in db.execute('SELECT date FROM episodes ORDER BY date'):
