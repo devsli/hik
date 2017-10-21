@@ -24,3 +24,13 @@ To properly save/load SQLite3 database you first need to tune your git::
   git config --global filter.sqlite.clean sqlite3.clean
   git config --global filter.sqlite.smudge sqlite3.smudge
 
+Как использовать
+~~~~~~~~~~~~~~~~
+
+Поиск выпусков::
+
+  python -m kih fetch
+
+Получить ссылки на все выпуски::
+
+  python -m kih urls

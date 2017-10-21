@@ -64,7 +64,7 @@ def urls():
         print(URL % row[0])
 
 def print_usage():
-    print("Usage: %s fetch | urls" % argv[0])
+    print("Usage: %s <fetch | urls>" % argv[0])
 
 if len(argv) == 1:
     print_usage()
