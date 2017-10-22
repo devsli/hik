@@ -3,6 +3,8 @@ version: "2.1"
 services:
   www:
     image: nginx
+    environment:
+      VIRTUAL_HOST: "kih.suprun.pw"
     volumes:
       - "feed:/usr/share/nginx/html"
 
@@ -10,8 +12,6 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    environment:
-      VIRTUAL_HOST: "kih.suprun.pw"
     volumes:
       - "feed:/app/out"
 
