@@ -4,6 +4,7 @@ import feedparser
 from datetime import timedelta, date
 from sys import argv
 from jinja2 import Environment, PackageLoader, select_autoescape
+from codecs import decode
 
 db = sqlite3.connect("kih.sqlite")
 db.execute("""CREATE TABLE IF NOT EXISTS episodes
@@ -49,7 +50,7 @@ class Episode:
             if k == b'Content-Length':
                 self.length = int(v)
             elif k == b'Last-Modified':
-                self.pubdate = v
+                self.pubdate = decode(v, 'utf-8')
 
 def get_episode(date):
     result = Episode()
