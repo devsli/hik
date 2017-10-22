@@ -4,7 +4,7 @@ services:
   www:
     image: nginx
     environment:
-      VIRTUAL_HOST: "kih.suprun.pw"
+      VIRTUAL_HOST: "kih.sli.gonzoweb.ru"
     volumes:
       - "feed:/usr/share/nginx/html"
 
