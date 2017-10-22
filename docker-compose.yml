@@ -11,7 +11,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
     environment:
-      VIRTUAL_HOST: "http://hik.suprun.pw"
+      VIRTUAL_HOST: "kih.suprun.pw"
     volumes:
       - "feed:/app/out"
 
