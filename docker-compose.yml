@@ -1,0 +1,19 @@
+version: "2.1"
+
+services:
+  www:
+    image: nginx
+    volumes:
+      - "feed:/usr/share/nginx/html"
+
+  updater:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      VIRTUAL_HOST: "http://hik.suprun.pw"
+    volumes:
+      - "feed:/app/out"
+
+volumes:
+  feed:

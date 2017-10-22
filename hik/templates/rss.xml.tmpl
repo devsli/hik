@@ -27,7 +27,7 @@
       <itunes:image href="{{ item[6] or "http://www.radiorecord.ru/upload/iblock/b0b/b0b70a0b13e625a8a1c1b22505cadd05.jpg" }}" />
       <enclosure url="{{ item[7] }}" length="{{ item[1] }}" type="{{ item[8] or "audio/mpeg" }}" />
       <guid>{{ item[9] or item[7] }}</guid>
-      <pubDate>{{ item[1] }}</pubDate>
+      <pubDate>{{ item[0] }}</pubDate>
       <description>{{ item[10] or "" }}</description>
       <itunes:duration>{{ item[11] or "" }}</itunes:duration>
       <itunes:explicit>{{ item[12] or "clean" }}</itunes:explicit>
