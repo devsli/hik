@@ -141,7 +141,7 @@ def mkfeed():
         loader=PackageLoader('hik')
     )
     template = env.get_template('rss.xml.tmpl')
-    items = db.execute("SELECT * FROM episodes ORDER BY url DESC LIMIT 21")
+    items = db.execute("SELECT * FROM episodes ORDER BY url DESC")
     print(template.render(items=items))
 
 def fetch():
