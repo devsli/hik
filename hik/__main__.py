@@ -129,7 +129,7 @@ def load_id3(url):
             itunes_explicit, url, ))
 
 def load_missing_metadata():
-    c = db.execute("SELECT url FROM episodes WHERE title IS NULL LIMIT 1;")
+    c = db.execute("SELECT url FROM episodes WHERE title IS NULL ORDER BY url DESC LIMIT 1;")
     row = c.fetchone()
     if not row:
         return
