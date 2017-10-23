@@ -7,7 +7,7 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 from codecs import decode
 import eyed3
 
-db = sqlite3.connect("kih.sqlite")
+db = sqlite3.connect("/app/out/kih.sqlite")
 db.execute("""CREATE TABLE IF NOT EXISTS episodes
               (pubdate,
                len integer,
