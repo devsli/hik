@@ -104,7 +104,7 @@ def load_id3(url):
     title = "{} @ {}".format(id3.tag.artist, id3.tag.title)
     itunes_author = "Radio Record"
     itunes_subtitle = itunes_summary = "Треш-шоу Кремова и Хрусталева"
-    itunes_image = "http://www.radiorecord.ru/i/img/rr-logo-podcast.png"
+    itunes_image = "http://www.radiorecord.ru/upload/iblock/b0b/b0b70a0b13e625a8a1c1b22505cadd05.jpg"
     type_ = "audio/mpeg"
     guid = url
     description = ""
