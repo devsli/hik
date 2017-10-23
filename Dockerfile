@@ -1,6 +1,6 @@
 FROM alpine
 
-RUN apk -U add curl-dev gcc musl-dev openssl-dev python3-dev python3
+RUN apk -U add curl-dev gcc musl-dev openssl-dev python3-dev python3 libmagic
 RUN pip3 install feedparser jinja2 pycurl eyed3
 
 COPY ./hik /app/hik
