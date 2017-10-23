@@ -5,6 +5,7 @@ from datetime import timedelta, date
 from sys import argv
 from jinja2 import Environment, PackageLoader, select_autoescape
 from codecs import decode
+import eyed3
 
 db = sqlite3.connect("kih.sqlite")
 db.execute("""CREATE TABLE IF NOT EXISTS episodes
@@ -25,6 +26,16 @@ db.execute("""CREATE TABLE IF NOT EXISTS episodes
 URL = "http://78.140.251.40/tmp_audio/itunes2/hik_-_rr_%s.mp3"
 FEED = "http://www.radiorecord.ru/rss.xml"
 DATEFMT = "%Y-%m-%d"
+
+def download(url, destination):
+    fp = open(destination, "wb")
+    curl = pycurl.Curl()
+    curl.setopt(pycurl.URL, url)
+    curl.setopt(pycurl.WRITEDATA, fp)
+    curl.perform()
+    curl.close()
+    fp.close()
+
 
 def daterange(start_date, end_date):
     for n in range(int ((end_date - start_date).days)):
@@ -67,7 +78,7 @@ def load_metadata(feed):
     len_ = feed['links'][0]['length']
     title = feed['title']
     itunes_author = feed['author']
-    itunes_subtitles = feed['subtitle']
+    itunes_subtitle = feed['subtitle']
     itunes_summary = feed['summary']
     itunes_image = feed['image']['href']
     url = feed['links'][0]['href']
@@ -83,9 +94,47 @@ def load_metadata(feed):
         itunes_image, url, type, guid, description, itunes_duration,
         itunes_explicit)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", (
-        pubdate, len_, title, itunes_author, itunes_subtitles, itunes_summary,
+        pubdate, len_, title, itunes_author, itunes_subtitle, itunes_summary,
         itunes_image, url, type_, guid, description, itunes_duration,
         itunes_explicit))
+
+def load_id3(url):
+    download(url, "/tmp/kih.mp3")
+    id3 = eyed3.load("/tmp/kih.mp3")
+    title = "{} @ {}".format(id3.tag.artist, id3.tag.title)
+    itunes_author = "Radio Record"
+    itunes_subtitle = itunes_summary = "Треш-шоу Кремова и Хрусталева"
+    itunes_image = "http://www.radiorecord.ru/i/img/rr-logo-podcast.png"
+    type_ = "audio/mpeg"
+    guid = url
+    description = ""
+    itunes_duration = str(timedelta(seconds=id3.info.time_secs))
+    itunes_explicit = "clean"
+
+    db.execute("""
+        UPDATE episodes SET
+            title = ?,
+            itunes_author = ?,
+            itunes_subtitle = ?,
+            itunes_summary = ?,
+            itunes_image = ?,
+            type = ?,
+            guid = ?,
+            description = ?,
+            itunes_duration = ?,
+            itunes_explicit = ?
+        WHERE url = ?""", (
+            title, itunes_author, itunes_subtitle, itunes_summary,
+            itunes_image, type_, guid, description, itunes_duration,
+            itunes_explicit, url, ))
+
+def load_missing_metadata():
+    c = db.execute("SELECT url FROM episodes WHERE title IS NULL LIMIT 1;")
+    row = c.fetchone()
+    if not row:
+        return
+
+    load_id3(row[0])
 
 def mkfeed():
     env = Environment(
@@ -126,7 +175,8 @@ args = {
     "fetchold": fetch_old,
     "urls": urls,
     "fetch": fetch,
-    "feed": mkfeed
+    "feed": mkfeed,
+    "id3": load_missing_metadata
 }
 
 if len(argv) == 1:

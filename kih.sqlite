@@ -14,7 +14,7 @@ CREATE TABLE episodes
                description,
                itunes_duration,
                itunes_explicit);
-INSERT INTO "episodes" VALUES('Tue, 15 Mar 2016 02:13:53 GMT',103245529,NULL,NULL,NULL,NULL,NULL,'http://78.140.251.40/tmp_audio/itunes2/hik_-_rr_2016-03-14.mp3',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO "episodes" VALUES('Tue, 15 Mar 2016 02:13:53 GMT',103245529,'Кремов и Хрусталев @ Radio Record #1351 (14-03-2016)','Radio Record','Треш-шоу Кремова и Хрусталева','Треш-шоу Кремова и Хрусталева','http://www.radiorecord.ru/i/img/rr-logo-podcast.png','http://78.140.251.40/tmp_audio/itunes2/hik_-_rr_2016-03-14.mp3','audio/mpeg','http://78.140.251.40/tmp_audio/itunes2/hik_-_rr_2016-03-14.mp3','','0:42:58','clean');
 INSERT INTO "episodes" VALUES('Wed, 13 Jul 2016 01:47:34 GMT',51446802,NULL,NULL,NULL,NULL,NULL,'http://78.140.251.40/tmp_audio/itunes2/hik_-_rr_2016-07-12.mp3',NULL,NULL,NULL,NULL,NULL);
 INSERT INTO "episodes" VALUES('Thu, 04 Aug 2016 01:56:13 GMT',95508060,NULL,NULL,NULL,NULL,NULL,'http://78.140.251.40/tmp_audio/itunes2/hik_-_rr_2016-08-03.mp3',NULL,NULL,NULL,NULL,NULL);
 INSERT INTO "episodes" VALUES('Fri, 05 Aug 2016 02:02:17 GMT',98437954,NULL,NULL,NULL,NULL,NULL,'http://78.140.251.40/tmp_audio/itunes2/hik_-_rr_2016-08-04.mp3',NULL,NULL,NULL,NULL,NULL);
