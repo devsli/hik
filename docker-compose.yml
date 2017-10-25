@@ -6,7 +6,7 @@ services:
     environment:
       VIRTUAL_HOST: "kih.sli.gonzoweb.ru"
     volumes:
-      - "feed:/usr/share/nginx/html"
+      - "feed:/usr/share/nginx/html:ro"
     restart: always
 
   updater:
