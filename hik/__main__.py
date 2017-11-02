@@ -64,10 +64,10 @@ class Episode:
             elif k == b'Last-Modified':
                 self.pubdate = decode(v, 'utf-8')
 
-def get_episode(date):
+def get_episode(url):
     result = Episode()
     c = pycurl.Curl()
-    c.setopt(c.URL, URL % date.strftime(DATEFMT))
+    c.setopt(c.URL, url)
     c.setopt(c.HEADERFUNCTION, result.feed)
     c.setopt(c.NOBODY, True)
     c.perform()
@@ -129,6 +129,14 @@ def load_id3(url):
             itunes_image, type_, guid, description, itunes_duration,
             itunes_explicit, url, ))
 
+def remove_deleted():
+    urls = db.execute("SELECT url FROM episodes")
+    for url in urls:
+        url = url[0]
+        item = get_episode(url)
+        if not item.exists:
+            db.execute("DELETE FROM episodes WHERE url = ?", (url, ))
+
 def load_missing_metadata():
     c = db.execute("SELECT url FROM episodes WHERE title IS NULL ORDER BY url DESC LIMIT 1;")
     row = c.fetchone()
@@ -155,7 +163,7 @@ def fetch_old():
     start_date = date(2016, 3, 14)
     end_date = date.today()
     for current in daterange(start_date, end_date):
-        episode = get_episode(current)
+        episode = get_episode(URL % current.strftime(DATEFMT))
         if episode.exists:
             print("%s: exists!" % current)
             datestr = current.strftime(DATEFMT)
@@ -177,7 +185,8 @@ args = {
     "urls": urls,
     "fetch": fetch,
     "feed": mkfeed,
-    "id3": load_missing_metadata
+    "id3": load_missing_metadata,
+    "gc": remove_deleted
 }
 
 if len(argv) == 1:

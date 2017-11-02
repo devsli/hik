@@ -9,6 +9,8 @@ RUN mkdir /app/out && \
     echo -e "#!/bin/sh\ncd /app && python3 -m hik fetch && python3 -m hik feed > /app/out/rss.xml" > /etc/periodic/15min/kih-feed && \
     chmod +x /etc/periodic/15min/kih-feed && \
     echo -e "#!/bin/sh\ncd /app && python3 -m hik id3" > /etc/periodic/hourly/kih-downloader && \
-    chmod +x /etc/periodic/hourly/kih-downloader
+    chmod +x /etc/periodic/hourly/kih-downloader && \
+    echo -e "#!/bin/sh\ncd /app && python3 -m hik gc" > /etc/periodic/weekly/kih-gc && \
+    chmod +x /etc/periodic/weekly/kih-gc
 
 CMD ["/usr/sbin/crond", "-f"]
