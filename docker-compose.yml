@@ -4,7 +4,7 @@ services:
   www:
     image: nginx
     environment:
-      VIRTUAL_HOST: "kih.sli.gonzoweb.ru"
+      VIRTUAL_HOST: kih.sli.gonzoweb.ru
     volumes:
       - "feed:/usr/share/nginx/html:ro"
     restart: always
@@ -13,6 +13,8 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    environment:
+      KIH_SQLITE_PATH: /app/out/kih.sqlite
     volumes:
       - "feed:/app/out"
     restart: always
