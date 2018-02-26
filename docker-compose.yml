@@ -4,7 +4,7 @@ services:
   www:
     image: nginx
     environment:
-      VIRTUAL_HOST: kih.sli.gonzoweb.ru
+      VIRTUAL_HOST: ${VIRTUAL_HOST}
     volumes:
       - "feed:/usr/share/nginx/html:ro"
     restart: always
